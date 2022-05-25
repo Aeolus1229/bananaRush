@@ -1,0 +1,2 @@
+# collectorGame
+HELLO THIS IS THE README
