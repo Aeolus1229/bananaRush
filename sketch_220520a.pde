@@ -1,8 +1,18 @@
+
+
+
+
 import processing.sound.*;
 
 
-SoundFile hurt;
 
+
+
+SoundFile hurt;
+SoundFile music;
+SoundFile collectSound;
+SoundFile monkeyNoise;
+SoundFile menuMusic;
 
 /* Controlling the Sprite Lab 
    
@@ -32,33 +42,67 @@ private String dashDirection = " ";
 Sprite s1;
 Button playButton;
 Enemy[] enemyList;
+Collectable[] collectList;
+
+
+
+int highscore = 0;
+int collectCount = 1;
+int enemyCount = 10;
+int score = 0;
+int health = 20;
+
+color color_under_mouse;
 
 boolean playing = false;
+
+public boolean hitboxes;
 
 
 Sprite background;
 public String menu1 = "Press Start!";
 public String menu2 = "Paused";
 
+String  data;
 
+String[] fontList = PFont.list();
 
 //initialize them in setup().
 void setup(){
   size(800, 800);
+  stroke(0);
   
-  playButton = new Button("Play", width/2, height/2, 100, 40, 150, 255, 60);
+  enemyCount = 10;
+  
+  noSmooth();
+  
+  hitboxes = false;
+  
+  playButton = new Button("Play", width/2, height/2, 100, 40, 150, 255, 60, 24, 'b');
   
   background = new Sprite("background.png", 1.3, width/2, height/2);
   
   hurt = new SoundFile(this, "hurt.wav");
+  music = new SoundFile(this, "music.wav");
+  collectSound = new SoundFile(this, "collect.wav");
+  monkeyNoise = new SoundFile(this, "monkeynoise.wav");
+  menuMusic = new SoundFile(this, "menu.wav");
   
   imageMode(CENTER); 
   
-  s1 = new Sprite("player.png", 1.0, width/2, height/2);
-  enemyList = new Enemy[10];
+  s1 = new Sprite("player1.png", 1.0, width/2, height/2);
+  enemyList = new Enemy[30];
+  collectList = new Collectable[1];
   
-  for(int i = 0; i < 10; i++){
-    enemyList[i] = new Enemy("enemy.png", (float)Math.random()*width, (float)Math.random()*height, 100, random(0, 360), (float)(Math.random()*2) + 2); //THIS DOESN"T WORK AND I DONT KNOW WHY. 
+  menuMusic.loop();
+  
+  for(int i = 0; i < 30; i++){
+    enemyList[i] = new Enemy("frame", (float)Math.random()*width, (float)Math.random()*height, 100, random(0, 360), (float)(Math.random()*2) + 2, (float)((Math.random()-0.50)/8)); //THIS DOESN"T WORK AND I DONT KNOW WHY. 
+    
+  }
+  for(int i = 0; i < collectCount; i++)
+  {
+  collectList[i] = new Collectable(random(0, width), random(0, height));
   }
 }
 
@@ -67,28 +111,123 @@ void draw(){
   
   
   
-  println(mouseX, mouseY);
+  background(150);
+  
+  textSize(40);
+  text("Highscore - " + Integer.toString(highscore), width/2, height/1.5);
+  text("Banana Rush", width/2, height /3.5);
+  
   if(playing){
+    
+    
+    
+    
+    
+
+
+  
+        if(health <= 0)
+        {
+          if(score > highscore)
+          {
+            highscore = score;
+          }
+          
+          music.stop();
+          monkeyNoise.play();
+          score = 0;
+          playing = false;
+          health = 20;
+          setup();
+          
+        }
         background(255);
-        background.display();
+        
+
+        
+        
+        //background.display();
         s1.display();
         s1.update();
+         fill(255, 0, 0);
+         rect(s1.x - 20, s1.y - 40, 40, 10);
+         
+         fill(0, 255, 0);
+         rect(s1.x - 20, s1.y - 40, health*2, 10);
         
-        for(int g = 0; g < 10; g++){
-          enemyList[g].display();
-          enemyList[g].update();
-          if(enemyList[g].Collision())
+        for(int d = 0; d < collectCount; d++){
+          collectList[d].display();
+          collectList[d].update();
+          if(collectList[d].collision)
           {
-            textSize(40);
-            text("Game Over!", width/2, height/2);
+            score++;
+            println(score);
+            
+            if(score % 1 == 0)
+            {
+             enemyCount++;
+            
+            
+            }
           }
+          
         }
+        
+        for(int g = 0; g < enemyCount; g++)
+        {
+          enemyList[g].update();
+          enemyList[g].display();
+        }
+        
+        if(color(get((int)(s1.x + s1.w/2), (int)(s1.y))) == enemyList[0].snakeColor1 || color(get((int)(s1.x + s1.w/2), (int)(s1.y))) == enemyList[0].snakeColor2 || color(get((int)(s1.x + s1.w/2), (int)(s1.y))) == enemyList[0].snakeColor3){
+            health--;
+            println("right");}
+        else if(color(get((int)(s1.x + s1.w/2), (int)(s1.y))) == enemyList[0].snakeColor1 || color(get((int)(s1.x + s1.w/2), (int)(s1.y))) == enemyList[0].snakeColor2 || color(get((int)(s1.x + s1.w/2), (int)(s1.y))) == enemyList[0].snakeColor3){
+            health--;
+          println("left");}
+        else if(color(get((int)(s1.x), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor1 || color(get((int)(s1.x), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor2 || color(get((int)(s1.x), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor3){
+            health--;
+          println("bottom");}
+        else if(color(get((int)(s1.x), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor1 || color(get((int)(s1.x), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor2 || color(get((int)(s1.x), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor3){
+            health--;
+          println("top");}
+        else if(color(get((int)(s1.x + s1.w/2), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor1 || color(get((int)(s1.x + s1.w/2), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor2 || color(get((int)(s1.x + s1.w/2), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor3){
+            health--;
+          println("top right");}
+        else if(color(get((int)(s1.x - s1.w/2), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor1 || color(get((int)(s1.x - s1.w/2), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor2 || color(get((int)(s1.x - s1.w/2), (int)(s1.y - s1.h/2))) == enemyList[0].snakeColor3){
+            health--;
+          println("top left");}
+        else if(color(get((int)(s1.x + s1.w/2), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor1 || color(get((int)(s1.x + s1.w/2), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor2 || color(get((int)(s1.x + s1.w/2), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor3){
+            health--;
+          println("bottom right");}
+        else if(color(get((int)(s1.x - s1.w/2), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor1 || color(get((int)(s1.x - s1.w/2), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor2 || color(get((int)(s1.x - s1.w/2), (int)(s1.y + s1.h/2))) == enemyList[0].snakeColor3){
+            health--;
+          println("bottom left");}
+
+       /*
+       color_under_mouse = get(mouseX, mouseY); //COLOR COLLISION _WILL_ WORK
+      
+      fill(color_under_mouse);
+      rect(100, 100, 30, 30);
+      
+      if(red(color_under_mouse) != 255 && green(color_under_mouse) != 255 && blue(color_under_mouse) != 255){
+      println(red(color_under_mouse), green(color_under_mouse), blue(color_under_mouse));
+      }
+        */
+        
+        fill(0);
+        textSize(30);
+        text(score, 30, 30);
+        
       }
    else
     {
       playButton.update();
-      print(playButton.clicked, playButton.hovered);
-      if(playButton.clicked){playing = true;}
+
+      if(playButton.clicked){
+      menuMusic.stop();
+      music.loop();
+      playing = true;}
       playButton.display();
     }
   }
@@ -101,8 +240,8 @@ void keyPressed(){
   
   
 
- 
-  println(key);
+  
+
   if(key == 'a'){
     s1.change_x = -MOVE_SPEED; 
     dashDirection = "a";
@@ -240,4 +379,10 @@ void keyReleased(){
     s1.change_y = 0;
 
   }
+  if(key == 'b')
+  {
+    if(hitboxes){hitboxes = false;}
+    else{hitboxes = true;}
+  }
+  
 }

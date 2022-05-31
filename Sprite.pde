@@ -25,12 +25,27 @@ public class Sprite{
     
  
     image(image, x, y, w, h);
-
     
+    
+    if(hitboxes)
+  {
+    ellipse(x, y + h/2, 2, 2);
+    ellipse(x, y - h/2, 2, 2);
+    ellipse(x + w/2, y + h/2, 2, 2);
+    ellipse(x - w/2, y + h/2, 2, 2);
+    ellipse(x - w/2, y, 2, 2);
+    ellipse(x + w/2, y, 2, 2);
+    ellipse(x + w/2, y - h/2, 2, 2);
+    ellipse(x - w/2, y - h/2, 2, 2);
+    
+  }
+    
+    //
     //println(w, h);
   }
   public void update(){
     x += change_x;
     y += change_y;
   }
+  
 }
