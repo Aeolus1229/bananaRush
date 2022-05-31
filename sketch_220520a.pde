@@ -58,7 +58,7 @@ boolean playing = false;
 
 public boolean hitboxes;
 
-
+boolean funi = false;
 Sprite background;
 public String menu1 = "Press Start!";
 public String menu2 = "Paused";
@@ -69,7 +69,7 @@ String[] fontList = PFont.list();
 
 //initialize them in setup().
 void setup(){
-  size(800, 800);
+  size(1600, 800);
   stroke(0);
   
   enemyCount = 10;
@@ -161,9 +161,10 @@ void draw(){
           if(collectList[d].collision)
           {
             score++;
+            health++;
             println(score);
             
-            if(score % 1 == 0)
+            if(score % 10 == 0)
             {
              enemyCount++;
             
@@ -219,6 +220,8 @@ void draw(){
         textSize(30);
         text(score, 30, 30);
         
+        if(funi){image(loadImage("image0.png"), (float)mouseX, (float)mouseY);}
+        
       }
    else
     {
@@ -233,6 +236,11 @@ void draw(){
   }
   
 
+
+void shop()
+{
+  
+}
 
 void keyPressed(){
 // move character using 'a', 's', 'd', 'w'. Also use MOVE_SPEED above.\
@@ -383,6 +391,11 @@ void keyReleased(){
   {
     if(hitboxes){hitboxes = false;}
     else{hitboxes = true;}
+  }
+    if(key == 'p')
+  {
+    if(funi){funi = false;}
+    else{funi = true;}
   }
   
 }
