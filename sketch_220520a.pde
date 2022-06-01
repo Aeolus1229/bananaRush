@@ -14,6 +14,8 @@ SoundFile collectSound;
 SoundFile monkeyNoise;
 SoundFile menuMusic;
 
+
+
 /* Controlling the Sprite Lab 
    
    There are two versions of this lab:
@@ -74,7 +76,11 @@ String[] fontList = PFont.list();
 //initialize them in setup().
 void setup(){
   size(1600, 800);
+  
+  surface.setTitle("Banana Rush " + highscore);
   stroke(0);
+  
+  PImage icon = loadImage("player1.png");
   
   enemyCount = 10;
   
@@ -95,6 +101,8 @@ void setup(){
   menuMusic = new SoundFile(this, "menu.wav");
   
   imageMode(CENTER); 
+  
+  surface.setIcon(icon);
   
   s1 = new Sprite("player1.png", 1.0, width/2, height/2);
   enemyList = new Enemy[30];
@@ -117,7 +125,7 @@ void draw(){
   
   
   
-
+    //surface.setLocation((int)random(0, 1000), (int)random(0, 1000)); //Dont uncomment this
   
 
   if(playing){
