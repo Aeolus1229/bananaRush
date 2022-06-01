@@ -85,7 +85,7 @@ void setup(){
   
   
   //print("setup");
-  size(800, 800);
+  size(1600, 800);
   
   surface.setTitle("Banana Rush " + highscore);
   stroke(0);
@@ -120,12 +120,12 @@ void setup(){
   surface.setIcon(icon);
   
   s1 = new Sprite("player1.png", monkeySize, width/2, height/2);
-  enemyList = new Enemy[30];
+  enemyList = new Enemy[1000];
   collectList = new Collectable[1];
   
   menuMusic.loop();
   
-  for(int i = 0; i < 30; i++){
+  for(int i = 0; i < 100; i++){
     
     direction = (int)random(1, 4);
     if(direction == 1)
@@ -222,7 +222,7 @@ void draw(){
             health++;
             println(score);
             
-            if(score % 5 == 0)
+            if(score % 5 == 0 && enemyCount < 1000)
             {
              enemyCount++;
             
@@ -289,7 +289,7 @@ void draw(){
       //print("else");
                 background(150);
           if(!playing && !shopOpen){
-          //image(loadImage("thumbnail.png"), width/2, height/2);
+          image(loadImage("thumbnail.png"), width/2, height/2);
           
           textSize(40);
           text("Highscore - " + Integer.toString(highscore), width/2, height/1.5);
@@ -384,9 +384,14 @@ void keyPressed(){
   
   
   if(key == 'u'){
-    score++; 
+    score += bananaValue; 
 
-    
+                if(score % 5 == 0 && enemyCount < 1000)
+            {
+             enemyCount++;
+            
+            
+            }
   }
   
 
