@@ -70,7 +70,7 @@ public class Enemy{
       image = loadImage(filename +"_"+ ((frame-1)/2) + ".gif");
     }
     
-    xIncrease = ((speed + min(score/10, 8))*(float)Math.sin(angle))/(float)Math.sin(Math.PI/2);
+    xIncrease = ((speed + min(score/25, 4))*(float)Math.sin(angle))/(float)Math.sin(Math.PI/2);
     yIncrease = ((speed + min(score/25, 4))*(float)Math.sin(Math.PI - angle + Math.PI/2))/(float)Math.sin(Math.PI/2);
     y += yIncrease;
     x += xIncrease;

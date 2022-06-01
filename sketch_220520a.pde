@@ -14,8 +14,6 @@ SoundFile collectSound;
 SoundFile monkeyNoise;
 SoundFile menuMusic;
 
-
-
 /* Controlling the Sprite Lab 
    
    There are two versions of this lab:
@@ -43,10 +41,9 @@ private String dashDirection = " ";
 //declare global variables
 Sprite s1;
 Button playButton;
-Button shopButton;
 Enemy[] enemyList;
 Collectable[] collectList;
-Button shopClose;
+
 
 
 int highscore = 0;
@@ -61,13 +58,10 @@ boolean playing = false;
 
 public boolean hitboxes;
 
-boolean funi = false;
+
 Sprite background;
 public String menu1 = "Press Start!";
 public String menu2 = "Paused";
-
-boolean shopAvailable;
-boolean shopOpen;
 
 String  data;
 
@@ -75,21 +69,15 @@ String[] fontList = PFont.list();
 
 //initialize them in setup().
 void setup(){
-  size(1600, 800);
-  
-  surface.setTitle("Banana Rush " + highscore);
+  size(800, 800);
   stroke(0);
-  
-  PImage icon = loadImage("player1.png");
   
   enemyCount = 10;
   
   noSmooth();
   
   hitboxes = false;
- 
-  shopButton = new Button("Shop", width/2, height-200, 100, 40, 150, 255, 60, 24, 'b');
-  shopClose = new Button("", width-400, height/3.9, 20, 20, 255, 0, 0, 4, 'b');
+  
   playButton = new Button("Play", width/2, height/2, 100, 40, 150, 255, 60, 24, 'b');
   
   background = new Sprite("background.png", 1.3, width/2, height/2);
@@ -101,8 +89,6 @@ void setup(){
   menuMusic = new SoundFile(this, "menu.wav");
   
   imageMode(CENTER); 
-  
-  surface.setIcon(icon);
   
   s1 = new Sprite("player1.png", 1.0, width/2, height/2);
   enemyList = new Enemy[30];
@@ -125,10 +111,20 @@ void draw(){
   
   
   
-    //surface.setLocation((int)random(0, 1000), (int)random(0, 1000)); //Dont uncomment this
+  background(150);
   
-
+  textSize(40);
+  text("Highscore - " + Integer.toString(highscore), width/2, height/1.5);
+  text("Banana Rush", width/2, height /3.5);
+  
   if(playing){
+    
+    
+    
+    
+    
+
+
   
         if(health <= 0)
         {
@@ -136,8 +132,6 @@ void draw(){
           {
             highscore = score;
           }
-          
-          if(!shopAvailable){shopAvailable = true;}
           
           music.stop();
           monkeyNoise.play();
@@ -167,10 +161,9 @@ void draw(){
           if(collectList[d].collision)
           {
             score++;
-            health++;
             println(score);
             
-            if(score % 5 == 0)
+            if(score % 1 == 0)
             {
              enemyCount++;
             
@@ -226,28 +219,9 @@ void draw(){
         textSize(30);
         text(score, 30, 30);
         
-        if(funi){image(loadImage("image0.png"), (float)mouseX, (float)mouseY);}
-        
       }
-      
-   else if(shopOpen)
-        {
-          shop();
-        }
    else
     {
-                background(150);
-          if(!playing && !shopOpen){
-          image(loadImage("thumbnail.png"), width/2, height/2);
-          
-          textSize(40);
-          text("Highscore - " + Integer.toString(highscore), width/2, height/1.5);
-          text("Banana Rush", width/2, height /3.5);
-          
-          }
-      
-      
-      
       playButton.update();
 
       if(playButton.clicked){
@@ -255,37 +229,10 @@ void draw(){
       music.loop();
       playing = true;}
       playButton.display();
-      if(shopAvailable){
-        shopButton.update();
-        shopButton.display();
-        
-        if(shopButton.clicked)
-        {
-          shopOpen = true;
-        }
-        
-      }
-      
-
     }
   }
   
 
-
-void shop()
-{
-  
-  //fill(150);
-  rect(400, 200, 800, 400);
-  
-  shopClose.update();
-  shopClose.display();
-  
-  if(shopClose.clicked){shopOpen = false;}
-  
-  
-  
-}
 
 void keyPressed(){
 // move character using 'a', 's', 'd', 'w'. Also use MOVE_SPEED above.\
@@ -436,11 +383,6 @@ void keyReleased(){
   {
     if(hitboxes){hitboxes = false;}
     else{hitboxes = true;}
-  }
-    if(key == 'p')
-  {
-    if(funi){funi = false;}
-    else{funi = true;}
   }
   
 }
