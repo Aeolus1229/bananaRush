@@ -8,6 +8,7 @@ public class Button{
   PFont font;
   int fontSize;
   char fontType;
+  boolean isClickable;
   
   public Button(String ButtonText, float x, float y, float w, float h, int r, int g, int b, int fontSize, char fontType){
   
@@ -21,6 +22,8 @@ public class Button{
       this.b = b;
       this.hovered = false;
       this.clicked = false;
+      this.isClickable = true;
+      
       
       if(fontType == 'b'){
       this.font = createFont("Arial-BoldMT", fontSize);
@@ -45,7 +48,7 @@ public class Button{
      fill(255, 255, 255);
      
      textFont(font);
-     textSize(24);
+     
      
      textAlign(CENTER, CENTER);
      text(ButtonText, 0, 0);
@@ -67,22 +70,29 @@ public class Button{
         
         if(mousePressed)
         {
-
-          clicked = true;
+            if(isClickable){
+            clicked = true;
+            isClickable = false;
+            }else{clicked = false;}
         }
         else{
         clicked = false;
+        isClickable = true;
+        
         }
       }
+      
       else
     {
       clicked = false;
       hovered = false;
+      isClickable = true;
     }
     }
       else{
       clicked = false;
       hovered = false;
+      isClickable = true;
       }
 
   }
