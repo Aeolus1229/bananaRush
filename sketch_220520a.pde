@@ -27,6 +27,10 @@ private String dashDirection = " ";
 
 //declare global variables
 Sprite s1;
+PImage arm1;
+PImage arm2;
+PImage hand1;
+PImage hand2;
 Button playButton;
 Button shopButton;
 Enemy[] enemyList;
@@ -38,7 +42,11 @@ Button upgradePoints;
 Button upgradeSpeed;
 Button upgradeHealth;
 
+float grabX;
+float grabY;
 
+float elbowX;
+float elbowY;
 
 int highscore = 0;
 int collectCount = 1;
@@ -82,7 +90,10 @@ String[] fontList = PFont.list();
 //initialize them in setup().
 void setup(){
   
-  
+      arm1 = loadImage("arm1.png");
+      arm2 = loadImage("arm1.png");
+      hand1 = loadImage("hand2.png");
+      hand2 = loadImage("hand2.png");
   
   //print("setup");
   size(1600, 800);
@@ -90,7 +101,7 @@ void setup(){
   surface.setTitle("Banana Rush " + highscore);
   stroke(0);
   
-  PImage icon = loadImage("player1.png");
+  PImage icon = loadImage("monkey.png");
   
   enemyCount = 10;
   
@@ -105,7 +116,7 @@ void setup(){
   upgradeSize = new Button("Shrink - 50$", width/2, 4*height/10, width/5, height/14, 10, 200, 200, 24, 'b');
   upgradePoints = new Button("More bana per bana - 200$", width/2, 7*height/10, width/5, height/14, 10, 200, 200, 12, 'b');
   upgradeSpeed = new Button("Speed - 75$", width/2, 5*height/10, width/5, height/14, 10, 200, 200, 24, 'b');
-  upgradeHealth = new Button("Max Health - 100", width/2, 6*height/10, width/5, height/14, 10, 200, 200, 18, 'b');
+  upgradeHealth = new Button("Max Health - 100$", width/2, 6*height/10, width/5, height/14, 10, 200, 200, 18, 'b');
   
   background = new Sprite("background.png", 1.3, width/2, height/2);
   
@@ -119,13 +130,13 @@ void setup(){
   
   surface.setIcon(icon);
   
-  s1 = new Sprite("player1.png", monkeySize, width/2, height/2);
+  s1 = new Sprite("monkey.png", monkeySize, width/2, height/2);
   enemyList = new Enemy[1000];
   collectList = new Collectable[1];
   
   menuMusic.loop();
   
-  for(int i = 0; i < 100; i++){
+  for(int i = 0; i < 1000; i++){
     
     direction = (int)random(1, 4);
     if(direction == 1)
@@ -161,7 +172,7 @@ void draw(){
      
         
             
-  
+
   
   
   //print("draw");
@@ -192,12 +203,12 @@ void draw(){
           setup();
           
         }
-        background(255);
+        background(#637E4E);
         
 
         
         
-
+        
         
         
         
@@ -205,13 +216,41 @@ void draw(){
         if(health > maxHealth){health = maxHealth;}
         
         //background.display();
+        
+        /*
+          grabX = mouseX;
+          grabY = mouseY;
+          
+          stroke(100, 100, 100);
+
+          println(distPointX((float)((Math.atan((mouseY - s1.y)/(mouseX - s1.x)))), arm1.width*2));      
+          
+          if((dist(mouseX, mouseY, s1.x, s1.y) > arm1.width*2))
+          {
+            
+                      grabX = distPointX((float)((Math.atan((mouseY - s1.y)/(mouseX - s1.x)))*180/Math.PI), arm1.width*2); // DOESN"T WORK
+                      grabY = -(1 + s1.x - grabX - s1.y);
+                      
+                      print(grabX + " " + grabY);
+            
+          }
+          
+          pushMatrix();
+          translate(((s1.x + grabX)/2), ((s1.y + grabY)/2));
+          rotate((float)((Math.atan((grabY - s1.y)/(grabX - s1.x)))));
+          image(arm1, 0, 0);
+          popMatrix();
+          
+          */
+          
+        
         s1.display();
         s1.update();
          fill(255, 0, 0);
-         rect(s1.x - 20, s1.y - 40, 40, 10);
+         rect(s1.x - maxHealth, s1.y - 40, maxHealth*2, 10);
          
          fill(0, 255, 0);
-         rect(s1.x - 20, s1.y - 40, max(min(health*2, maxHealth*2), 0), 10);
+         rect(s1.x - maxHealth, s1.y - 40, max(min(health*2, maxHealth*2), 0), 10);
         
         for(int d = 0; d < collectCount; d++){
           collectList[d].display();
@@ -219,7 +258,7 @@ void draw(){
           if(collectList[d].collision)
           {
             score += bananaValue;
-            health++;
+            health += bananaValue/2;
             println(score);
             
             if(score % 5 == 0 && enemyCount < 1000)
